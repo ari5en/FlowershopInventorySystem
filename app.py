@@ -111,7 +111,7 @@ class FlowerShopApp:
         tk.Label(self.sidebar_frame, text="Fleurista", bg=sidebar_bg,
                  fg="#333333", font=title_font).pack(pady=(0, 12))
 
-        # Navigation buttons (neutral colors)
+        # Navigation buttons
         nav_btn_cfg = {
             "width": 20, "anchor": "w",
             "bd": 0, "relief": "flat",
