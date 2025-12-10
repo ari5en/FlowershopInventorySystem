@@ -1,0 +1,104 @@
+MariaDB [flowershop]> -- Category Table
+MariaDB [flowershop]> CREATE TABLE Category (
+    -> category_id INT AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(100) NOT NULL UNIQUE,
+    -> description VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [flowershop]> -- Supplier Table
+MariaDB [flowershop]> CREATE TABLE Supplier (
+    -> supplier_id  INT AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(100) NOT NULL,
+    -> contact VARCHAR(100),
+    -> address VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [flowershop]> -- Flower Table
+MariaDB [flowershop]> CREATE TABLE Flower (
+    -> flower_id INT AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(150) NOT NULL,
+    -> category_ID INT,
+    -> unit_price DECIMAL(10,2) NOT NULL,
+    -> description VARCHAR(500),
+    -> quantity INT NOT NULL DEFAULT 0,
+    -> reorder_level INT NOT NULL DEFAULT 5,
+    -> supplier_id INT,
+    -> CONSTRAINT fk_flower_category FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE SET NULL,
+    -> CONSTRAINT fk_flower_supplier FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) ON DELETE SET NULL,
+    -> CONSTRAINT unique_flower_supplier UNIQUE (name, supplier_id)
+    -> );
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [flowershop]> show tables;
++----------------------+
+| Tables_in_flowershop |
++----------------------+
+| category             |
+| flower               |
+| supplier             |
++----------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [flowershop]> desc category;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| category_id | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(100) | NO   | UNI | NULL    |                |
+| description | varchar(255) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.019 sec)
+
+MariaDB [flowershop]> desc flower;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| flower_id     | int(11)       | NO   | PRI | NULL    | auto_increment |
+| name          | varchar(150)  | NO   | MUL | NULL    |                |
+| category_ID   | int(11)       | YES  | MUL | NULL    |                |
+| unit_price    | decimal(10,2) | NO   |     | NULL    |                |
+| description   | varchar(500)  | YES  |     | NULL    |                |
+| quantity      | int(11)       | NO   |     | 0       |                |
+| reorder_level | int(11)       | NO   |     | 5       |                |
+| supplier_id   | int(11)       | YES  | MUL | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+
+8 rows in set (0.015 sec)
+
+MariaDB [flowershop]> desc supplier;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| supplier_id | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(100) | NO   |     | NULL    |                |
+| contact     | varchar(100) | YES  |     | NULL    |                |
+| address     | varchar(255) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.016 sec)
+
+MariaDB [flowershop]> -- Sample Categories
+MariaDB [flowershop]> INSERT INTO category (name, description) VALUES
+    -> ('Line Flowers', 'Provide height, width, and a clear "line" for the arrangement.'),
+    -> ('Form Flowers', 'Feature unique, distinctive shapes that provide a focal point or accent.'),
+    -> ('Mass Flowers', 'Round, full-bodied flowers used to add bulk, weight, and color.'),
+    -> ('Filler Flowers', 'Smaller flowers or delicate materials used to fill gaps.');
+Query OK, 4 rows affected (0.002 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [flowershop]> -- Sample Suppliers
+MariaDB [flowershop]> INSERT INTO supplier (name, contact, address) VALUES
+    -> ('BloomCo', '09123456789', '123 Flower St, Manila'),
+    -> ('PetalWorks', '09234567890', '911 Garden Ave, Quezon City'),
+    -> ('Flora', '09345678901', '156 Blossom Blvd, Makati');
+Query OK, 3 rows affected (0.003 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [flowershop]> INSERT INTO flower (name, category_id, unit_price, description, quantity, reorder_level, Supplier_ID) VALUES
+    -> ('Rose', 3, 50.00, 'Red Mass Flower', 20, 5, 1),
+    -> ('Lily', 2, 40.00, 'Elegant Form Flower', 15, 5, 2),
+    -> ('Carnation', 4, 25.00, 'Pink Filler Flower', 30, 5, 3),
+    -> ('Delphinium', 1, 60.00, 'Tall Line Flower', 10, 5, 1),
+    -> ('Orchid', 2, 80.00, 'Exotic Form Flower', 8, 3, 2);
+Query OK, 5 rows affected (0.002 sec)
+Records: 5  Duplicates: 0  Warnings: 0
